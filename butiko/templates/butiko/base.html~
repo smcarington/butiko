@@ -1,0 +1,33 @@
+{% load staticfiles %}
+
+<html>
+	<head>
+		<title>Botiku! - Manage your shopping</title>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" href="{% static "css/botiku.css" %}">
+	</head>
+	<body>
+		<div class = "page-header">
+            <div class = "col-md-8">
+                <h1><a href="{% url 'home_page' %}">Botiku!</a></h1>
+            </div>
+            <div class = "col-md-4">
+                {% if user.is_authenticated %}
+                <p class="top-menu">Hello {{ user.username }}<small> (<a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>) </small></p>
+                {% else %}
+                <a href="{% url 'django.contrib.auth.views.login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span> Log In</a>
+                {% endif %}
+            </div>
+            <br style="clear:both"/>
+		</div>
+		<div class="content container">
+			<div class="row">
+				<div class = "col-md-8">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

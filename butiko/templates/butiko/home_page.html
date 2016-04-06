@@ -1,0 +1,16 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+    {% if userItems %}
+        {% for listEl in userItems %}
+            <div class="list-summary">
+                <a href="{% url 'list_detail' pk=listEl.pk %}">{{ listEl.title }} <span>({{ listEl.item_set.count}} items)</span></a>
+                <p class="date"> Last Modified: {{ listEl.modified }} </p>
+            </div>
+        {% endfor %}
+    {% else %}
+    <div>
+        <p> Use this site to manage your grocery list. <p>
+    </div>
+    {% endif %}
+{% endblock %}

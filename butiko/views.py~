@@ -11,6 +11,6 @@ def home_page(request):
 def list_detail(request, pk):
     theList = get_object_or_404(ItemList, pk=pk)
     items   = theList.item_set.all()
-    return render(request, 'butiko/list_detail.html', {'items': items})
+    return render(request, 'butiko/list_detail.html', {'items', items})
 
 # Create your views here.
