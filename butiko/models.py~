@@ -23,6 +23,8 @@ class Item(models.Model):
 
     def change_number(self, diff=1):
         self.number = self.number + diff;
+        if self.number < 0:
+            self.number = 0
         self.save()
 
     def __str__(self):

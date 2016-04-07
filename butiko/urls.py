@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home_page, name='home_page'),
     url(r'^list/(?P<pk>\d+)/$', views.list_detail, name='list_detail'),
+    url(r'^list/change_item_count/$', views.change_item_count, name='change_item_count'),
 ]

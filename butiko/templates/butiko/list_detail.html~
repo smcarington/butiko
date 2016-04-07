@@ -2,10 +2,19 @@
 
 {% block content %}
     {% for item in items %}
-        <div class="list-detail">
-            <p> {{ item.title }} <span> (${{ item.price }})</span>.  Quantity: {{ item.number }} <p>
-            <p class="shop"> {{ item.store }} </p>
-            <p class="date"> Last Modified: {{ item.update }} </p>
-        </div>
+            <div class="list-detail">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p> {{ item.title }} <span> (${{ item.price }})</span>.  Quantity: <b id="{{item.title}}">{{ item.number }} <p>
+                        <p class="shop"> {{ item.store }} </p>
+                        <p class="date"> Last Modified: {{ item.update }} </p>
+                    </div>
+                    <div class="col-md-4">
+                        <a class="button-link" data-id="{{item.title}}-add" href=""><span class="glyphicon glyphicon-plus listbutton"></span></a>
+                        <a class="button-link" data-id="{{item.title}}-sub" href=""><span class="glyphicon glyphicon-minus listbutton"></span></a>
+                        <a class="button-link" data-id="" href=""><span class="glyphicon glyphicon-remove listbutton fright"></span></a>
+                    </div>
+                </div>
+            </div>
     {% endfor %}
 {% endblock %}
