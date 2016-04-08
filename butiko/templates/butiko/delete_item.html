@@ -1,0 +1,9 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+    <p class="warning">Delete {{item.title }}? </p>
+    <form action="{% url 'delete_item' pk=item.pk%}" class="delete-form" method="POST">{% csrf_token %}
+        <input class="btn btn-default" type="submit" value="Yes">
+    </form>
+    <a href="{% url 'list_detail' pk=item.itemList.pk %}" class="btn btn-default">No</a>
+{% endblock %}

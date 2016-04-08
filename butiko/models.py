@@ -18,13 +18,14 @@ class Item(models.Model):
     title    = models.CharField(max_length=50)
     store    = models.CharField(max_length=50)
     number   = models.IntegerField(default=0)
-    price    = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    price    = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     update   = models.DateTimeField(default=timezone.now)
 
     def change_number(self, diff=1):
         self.number = self.number + diff;
         if self.number < 0:
             self.number = 0
+        self.update = timezone.now()
         self.save()
 
     def __str__(self):

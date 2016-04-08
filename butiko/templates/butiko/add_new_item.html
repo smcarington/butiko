@@ -1,0 +1,14 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+    <h2>Add Item to {{list.title}} </h2>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {% for field in form %}
+            <div class="fieldWrapper">
+                {{ field.error }}
+                {{ field.label_tag }} {{field }}
+            </div>
+        {% endfor %}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% endblock %}

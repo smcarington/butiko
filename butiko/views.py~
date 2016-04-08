@@ -1,5 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse
+from django.utils import timezone
 from .models import ItemList, Item, PermRequest
+from .forms import ItemForm
     
 def home_page(request):
     if request.user.is_authenticated():
@@ -11,7 +14,7 @@ def home_page(request):
 def list_detail(request, pk):
     theList = get_object_or_404(ItemList, pk=pk)
     items   = theList.item_set.all()
-    return render(request, 'butiko/list_detail.html', {'items': items})
+    return render(request, 'butiko/list_detail.html', {'items': items, 'list': theList})
 
 def change_item_count(request):
     if request.method == 'GET':
@@ -20,8 +23,30 @@ def change_item_count(request):
             item.change_number(1);
         elif request.GET['action'] == "sub":
             item.change_number(-1);
-        return HttpResponse(returnNumber)
+        return HttpResponse(item.number)
+
+def add_new_item(request, listpk):
+    itemList = get_object_or_404(ItemList,pk=listpk)
+    if request.method == "POST":
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.itemList = itemList
+            item.update   = timezone.now()
+            item.save()
+        return redirect('list_detail', pk=listpk)
+    else:
+        form = ItemForm()
+        return render(request, 'butiko/add_new_item.html', {'form': form, 'list': itemList})
 
 
+def delete_item(request, pk):
+    item    = get_object_or_404(Item, pk = pk)
+    theList = item.itemList
+    if request.method == "POST":
+        item.delete()
+        return redirect('list_detail', pk=theList.pk)
+    else:
+        return render(request, 'butiko/delete_item.html', {'item': item})
 
 # Create your views here.

@@ -66,10 +66,32 @@ h1 a, small a {
 }
 
 a[class="button-link"]{
-    font-color: #000000;
+    color: #000000;
     text-decoration: none;
 }
 
 .fright{
     float:right;
+}
+
+.warning {
+    color: red;
+    font-size: 16pt;
+}
+
+.delete-form {
+    display: inline;
+}
+
+label {
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 80px;
+    padding-right: 10px;
+    text-align: right;
+}
+
+.fieldWrapper{
+    padding-bottom: 10px;
 }

@@ -5,7 +5,6 @@ $(document).ready(function() {
         itemID     = classString.substring(0,classString.indexOf('-'));
         itemAction = classString.substring(classString.indexOf('-')+1);
         $.get('/butiko/list/change_item_count/', {item: itemID, action: itemAction}, function(data, status){
-            alert("The server responded " + status);
             $("#"+item).html(data);
         });
     });
