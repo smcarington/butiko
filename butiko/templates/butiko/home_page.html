@@ -8,6 +8,8 @@
                 <p class="date"> Last Modified: {{ listEl.modified }} </p>
             </div>
         {% endfor %}
+        <br>
+        <a href="{% url 'add_new_list' %}" class="btn btn-default">Add New List</a>
     {% else %}
     <div>
         <p> Use this site to manage your grocery list. <p>

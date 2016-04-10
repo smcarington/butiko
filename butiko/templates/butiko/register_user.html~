@@ -1,12 +1,19 @@
 {% extends 'butiko/base.html' %}
 
 {% block content %}
-    <h2>Add Item to {{list.title}} </h2>
+    <h2>Welcome to Butiko!</h2>
+
+    {% if error %}
+        {% for key, val in error.items %}
+            {{val}}
+        {% endfor %}
+    {% endif %}
+
     <form method="POST" class="post-form">{% csrf_token %}
         {% for field in form %}
             <div class="fieldWrapper">
                 {{ field.error }}
-                {{ field.label_tag }} {{field }}
+                {{ field.label_tag }} {{field}}
             </div>
         {% endfor %}
         <button type="submit" class="save btn btn-default">Save</button>

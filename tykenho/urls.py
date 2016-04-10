@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.conf.urls import url, include, patterns
 from django.contrib import admin
+import butiko.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/register/$', butiko.views.register_user, name='register_user'),
     url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout', {'next_page': '/butiko/'}),
     url(r'^butiko/', include('butiko.urls')),

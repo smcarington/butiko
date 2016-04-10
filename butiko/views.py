@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
 from .models import ItemList, Item, PermRequest
-from .forms import ItemForm
+from .forms import ItemForm, ItemListForm, UserForm
     
 def home_page(request):
     if request.user.is_authenticated():
@@ -26,6 +27,8 @@ def change_item_count(request):
         return HttpResponse(item.number)
 
 def add_new_item(request, listpk):
+    # listpk is the primary key of the list to which the item is
+    # to be added.
     itemList = get_object_or_404(ItemList,pk=listpk)
     if request.method == "POST":
         form = ItemForm(request.POST)
@@ -34,6 +37,9 @@ def add_new_item(request, listpk):
             item.itemList = itemList
             item.update   = timezone.now()
             item.save()
+            # Update the modified property on list
+            itemList.modified = timezone.now()
+            itemList.save()
         return redirect('list_detail', pk=listpk)
     else:
         form = ItemForm()
@@ -49,4 +55,31 @@ def delete_item(request, pk):
     else:
         return render(request, 'butiko/delete_item.html', {'item': item})
 
+def add_new_list(request):
+    if request.method == "POST":
+        form = ItemListForm(request.POST)
+        if form.is_valid():
+            itemList = form.save(commit=False)
+            itemList.owner        = request.user
+            itemList.created_date = timezone.now()
+            itemList.modified     = timezone.now()
+            itemList.save()
+        return redirect('home_page')
+    else:
+        form = ItemListForm()
+        return render(request, 'butiko/add_new_item.html', {'form': form})
+
+def register_user(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(user.password)
+            user.save()
+            return redirect('home_page')
+        else:
+            return render(request, 'butiko/register_user.html', {'form': form, 'error': form.errors})
+    else:
+        form = UserForm()
+        return render(request, 'butiko/register_user.html', {'form': form})
 # Create your views here.
