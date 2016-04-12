@@ -8,4 +8,12 @@ $(document).ready(function() {
             $("#"+item).html(data);
         });
     });
+
+    $('#suggestion').keyup( function() {
+        var query;
+        query = $(this).val();
+        $.get('/butiko/suggest_list/', {suggestion: query}, function(data) {
+            $('#list_of_lists').html(data)
+        });
+    });
 });

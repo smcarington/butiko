@@ -34,8 +34,8 @@ class Item(models.Model):
 
 
 class PermRequest(models.Model):
-    itemList = models.ForeignKey(ItemList)
-    user     = models.ForeignKey(User)
+    itemList = models.ForeignKey(ItemList, related_name="user_requests")
+    user     = models.ForeignKey(User, related_name="list_requests")
 
     def __str__(self):
         return [self.itemList + " from " + self.user]
