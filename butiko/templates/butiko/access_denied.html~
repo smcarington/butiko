@@ -1,0 +1,6 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+    <p class="warning">You do not have permission to edit {{itemList.title}} </p>
+    <a href="{% url 'home_page' %}" class="btn btn-default">Return Home</a>
+{% endblock %}

@@ -12,12 +12,12 @@
                     <div class="col-md-4">
                         <a class="button-link" data-id="{{item.title}}-add" href=""><span class="glyphicon glyphicon-plus listbutton"></span></a>
                         <a class="button-link" data-id="{{item.title}}-sub" href=""><span class="glyphicon glyphicon-minus listbutton"></span></a>
-                        <a class="button-link" href="{% url 'delete_item' pk=item.pk %}"><span class="glyphicon glyphicon-remove listbutton fright"></span></a>
+                        <a class="button-link" href="{% url 'delete_item' pk=item.pk objectStr='item' %}"><span class="glyphicon glyphicon-remove listbutton fright"></span></a>
                     </div>
                 </div>
             </div>
     {% endfor %}
 
-    <a href="{% url 'add_new_list' %}" class="btn btn-default">Add New Item</a>
+    <a href="{% url 'add_new_item' listpk=list.pk %}" class="btn btn-default">Add New Item</a>
     
 {% endblock %}

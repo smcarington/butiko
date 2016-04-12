@@ -7,7 +7,9 @@ from .forms import ItemForm, ItemListForm, UserForm
     
 def home_page(request):
     if request.user.is_authenticated():
-        userItems = ItemList.objects.filter(owner=request.user).order_by('created_date')
+        user = request.user
+        userItems = user.lists.order_by('created_date')
+        #userItems = ItemList.objects.filter(owner=request.user).order_by('created_date')
         return render(request, 'butiko/home_page.html', {'userItems': userItems})
     else:
         return render(request, 'butiko/home_page.html', {})
@@ -46,14 +48,31 @@ def add_new_item(request, listpk):
         return render(request, 'butiko/add_new_item.html', {'form': form, 'list': itemList})
 
 
-def delete_item(request, pk):
-    item    = get_object_or_404(Item, pk = pk)
-    theList = item.itemList
-    if request.method == "POST":
-        item.delete()
-        return redirect('list_detail', pk=theList.pk)
+# Deletes either an item or a list, as given by the string object_type
+# Checks to see if the user is allowed access
+def delete_item(request, objectStr, pk):
+
+    # Depending on which item is set, we return different pages
+    if objectStr == "item":
+        theObj      = get_object_or_404(Item, pk = pk)
+        theList     = theObj.itemList
+        return_View = redirect('home_page')
+    elif objectStr == "list":
+        theList     = get_object_or_404(ItemList, pk = pk)
+        theObj      = theList
+        return_View = redirect('list_detail', pk=theList.pk)
     else:
-        return render(request, 'butiko/delete_item.html', {'item': item})
+        return HttpResponse('<h1>Invalid Object Type</h1>')
+
+    # Check to see if the user is allowed to edit the list
+    if request.user.lists.filter(title=theList.title).exists():
+        if request.method == "POST":
+            theObj.delete()
+            return return_View
+        else:
+            return render(request, 'butiko/delete_item.html', {'object': theObj, 'type' : objectStr})
+    else:
+        return render(request, 'butiko/access_denied.html', {'object': theObj})
 
 def add_new_list(request):
     if request.method == "POST":
@@ -64,6 +83,7 @@ def add_new_list(request):
             itemList.created_date = timezone.now()
             itemList.modified     = timezone.now()
             itemList.save()
+            itemList.users.add(request.user)
         return redirect('home_page')
     else:
         form = ItemListForm()

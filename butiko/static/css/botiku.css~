@@ -63,6 +63,7 @@ h1 a, small a {
     padding: 10px 10px 10px 10px;
     border-radius: 20px;
     text-decoration: none;
+    font-size: 12pt;
 }
 
 a[class="button-link"]{
@@ -97,5 +98,5 @@ label {
 }
 
 ul.errorlist li {
-    font: red;
+    color: red;
 }

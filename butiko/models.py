@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 
 class ItemList(models.Model):
     owner        = models.ForeignKey(User)
+    users        = models.ManyToManyField(User, related_name='lists')
     title        = models.CharField(max_length=50)
     created_date = models.DateTimeField(default=timezone.now)
     modified     = models.DateTimeField(default=timezone.now)
@@ -35,5 +36,8 @@ class Item(models.Model):
 class PermRequest(models.Model):
     itemList = models.ForeignKey(ItemList)
     user     = models.ForeignKey(User)
+
+    def __str__(self):
+        return [self.itemList + " from " + self.user]
 
 # Create your models here.
