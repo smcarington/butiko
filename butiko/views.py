@@ -123,7 +123,7 @@ def suggest_list(request):
     MAX_RESULTS = 8
     list_of_lists = []
     starts_with = ''
-    if request.method == "GET":
+    if 'suggestion' in request.GET:
         starts_with = request.GET['suggestion']
 
     list_of_lists = get_lists(MAX_RESULTS, starts_with)

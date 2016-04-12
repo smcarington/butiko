@@ -2,7 +2,7 @@
 
 {% block content %}
     <h4>Search for a list by typing its name below</h4>
-    <form method="POST">
+    <form>
         <label></label>
         <li><input type="text" name="suggestion" value="" id="suggestion" /></li>
     </form>
