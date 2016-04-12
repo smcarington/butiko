@@ -1,0 +1,8 @@
+{% for listEl in list_of_lists %}
+    <div class="list-detail">
+        <p> {{ listEl.title }} <span> (Owner: <b>{{ listEl.owner }}</b>) 
+        <button class="btn btn-default request" type="submit" data-id="{{listEl.title}}">Request</button>
+        </p>
+    </div>
+{% endfor %}
+

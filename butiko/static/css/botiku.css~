@@ -97,5 +97,9 @@ label {
 }
 
 ul.errorlist li {
-    font: red;
+    color: red;
+}
+
+.request {
+    padding-left: 10px;
 }

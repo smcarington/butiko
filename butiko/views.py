@@ -82,4 +82,38 @@ def register_user(request):
     else:
         form = UserForm()
         return render(request, 'butiko/register_user.html', {'form': form})
+
+# Helper function which queries the database by name 'starts_with'
+# and returns an array of matches of size 'max_results"
+def get_lists(max_results=0, starts_with=''):
+    list_of_lists = []
+    if starts_with:
+        list_of_lists = ItemList.objects.filter(title__istartswith=starts_with)
+    else:
+        list_of_lists = ItemList.objects.all()
+
+    if max_results >0:
+        if len(list_of_lists) > max_results:
+            list_of_lists=list_of_lists[:max_results]
+
+    return list_of_lists
+
+
+def suggest_list(request):
+    MAX_RESULTS = 8
+    list_of_lists = []
+    starts_with = ''
+    if request.method == "GET":
+        starts_with = request.GET['suggestion']
+
+    list_of_lists = get_lists(MAX_RESULTS, starts_with)
+
+    # Pass the current list of requests for that user
+    cur_requests = request.user.list_requests.all()
+
+    return render(request, 'butiko/request_permission.html', {'list_of_lists': list_of_lists, 'requests': cur_requests})
+
+def list_search(request):
+    return render(request, 'butiko/list_search.html')
+
 # Create your views here.

@@ -1,0 +1,13 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+    <h4>Search for a list by typing its name below</h4>
+    <form>
+        <label></label>
+        <li><input type="text" name="suggestion" value="" id="suggestion" /></li>
+    </form>
+
+    <div id="list_of_lists">
+        {% include 'butiko/request_permission.html' %}
+    </div>
+{% endblock %}

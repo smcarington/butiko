@@ -33,7 +33,7 @@ class Item(models.Model):
 
 
 class PermRequest(models.Model):
-    itemList = models.ForeignKey(ItemList)
-    user     = models.ForeignKey(User)
+    itemList = models.ForeignKey(ItemList, related_name="user_requests")
+    user     = models.ForeignKey(User, related_name="list_requests")
 
 # Create your models here.
