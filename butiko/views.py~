@@ -108,7 +108,7 @@ def register_user(request):
 def get_lists(max_results=0, starts_with=''):
     list_of_lists = []
     if starts_with:
-        list_of_lists = ItemList.objects.filter(title=starts_with)
+        list_of_lists = ItemList.objects.filter(title__istartswith=starts_with)
     else:
         list_of_lists = ItemList.objects.all()
 
