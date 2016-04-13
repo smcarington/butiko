@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^list/add_new_list/$', views.add_new_list, name='add_new_list'),
     url(r'^list_search/$', views.list_search, name='list_search'),
     url(r'^suggest_list/$', views.suggest_list, name='suggest_list'),
+    url(r'^request_perm/(?P<listpk>\d+)/$', views.request_permission, name='request_permission'),
 ]

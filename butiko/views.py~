@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.utils import timezone
@@ -84,7 +85,7 @@ def add_new_list(request):
             itemList.modified     = timezone.now()
             itemList.save()
             itemList.users.add(request.user)
-        return redirect('home_page')
+        return redirect('list_detail', pk=itemList.pk)
     else:
         form = ItemListForm()
         return render(request, 'butiko/add_new_item.html', {'form': form})
@@ -96,6 +97,11 @@ def register_user(request):
             user = form.save(commit=False)
             user.set_password(user.password)
             user.save()
+            
+            # Log user in and redirect to home page
+            user = authenticate(username = form.cleaned_data['username'],
+                                password = form.cleaned_data['password'])
+            login(request, user)
             return redirect('home_page')
         else:
             return render(request, 'butiko/register_user.html', {'form': form, 'error': form.errors})
@@ -135,5 +141,8 @@ def suggest_list(request):
 
 def list_search(request):
     return render(request, 'butiko/list_search.html')
+
+def request_permission(request, listpk):
+    return redirect('home_page')
 
 # Create your views here.

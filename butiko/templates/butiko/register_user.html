@@ -16,6 +16,12 @@
                 {{ field.label_tag }} {{field}}
             </div>
         {% endfor %}
-        <button type="submit" class="save btn btn-default">Save</button>
+        
+        <div class="fieldWrapper">
+            <label for="id_pass_conf">Confirm:</label>
+            <input id="id_pass_conf" max_length="128" name="passconf" type="password">
+        </div>
+
+        <button type="submit" class="save btn btn-default" id="register-user" disabled>Save</button>
     </form>
 {% endblock %}

@@ -16,4 +16,18 @@ $(document).ready(function() {
             $('#list_of_lists').html(data);
         });
     });
+
+    $('#id_pass_conf').keyup( function() {
+        firstpass  = $('#id_password').val()
+        secondpass = $(this).val()
+
+        if (firstpass && firstpass === secondpass) {
+            $('#register-user').prop('disabled', false);
+            $(this).css({'background-color': 'white'});
+        }
+        else {
+            $(this).css({'background-color': 'red'});
+            $('#register-user').prop('disabled', true);
+        }
+    });
 });
