@@ -38,6 +38,6 @@ class PermRequest(models.Model):
     user     = models.ForeignKey(User, related_name="list_requests")
 
     def __str__(self):
-        return [self.itemList + " from " + self.user]
+        return '%s from %s' % (self.itemList.title, self.user.username)
 
 # Create your models here.

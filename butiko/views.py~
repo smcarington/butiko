@@ -10,8 +10,9 @@ def home_page(request):
     if request.user.is_authenticated():
         user = request.user
         userItems = user.lists.order_by('created_date')
+        perm_requests = PermRequest.objects.filter(itemList__owner=user).values_list('itemList__title',flat=True)
         #userItems = ItemList.objects.filter(owner=request.user).order_by('created_date')
-        return render(request, 'butiko/home_page.html', {'userItems': userItems})
+        return render(request, 'butiko/home_page.html', {'userItems': userItems, 'perm_requests': dict(perm_requests)})
     else:
         return render(request, 'butiko/home_page.html', {})
 
@@ -110,13 +111,15 @@ def register_user(request):
         return render(request, 'butiko/register_user.html', {'form': form})
 
 # Helper function which queries the database by name 'starts_with'
-# and returns an array of matches of size 'max_results"
-def get_lists(max_results=0, starts_with=''):
+# and returns an array of matches of size 'max_results". user should
+# be a User model.
+def get_lists(user,max_results=0, starts_with=''):
     list_of_lists = []
     if starts_with:
-        list_of_lists = ItemList.objects.filter(title__istartswith=starts_with)
+#        list_of_lists = ItemList.objects.filter(title__istartswith=starts_with)
+        list_of_lists = ItemList.objects.filter(title__istartswith=starts_with).exclude(users__username=user.username)
     else:
-        list_of_lists = ItemList.objects.all()
+        list_of_lists = ItemList.objects.exclude(users__username=user.username)
 
     if max_results >0:
         if len(list_of_lists) > max_results:
@@ -124,7 +127,8 @@ def get_lists(max_results=0, starts_with=''):
 
     return list_of_lists
 
-
+# Ajax response that returns a list of lists, but filters according
+# to whether the user already belongs or not
 def suggest_list(request):
     MAX_RESULTS = 8
     list_of_lists = []
@@ -132,17 +136,21 @@ def suggest_list(request):
     if 'suggestion' in request.GET:
         starts_with = request.GET['suggestion']
 
-    list_of_lists = get_lists(MAX_RESULTS, starts_with)
+    list_of_lists = get_lists(request.user, MAX_RESULTS, starts_with)
 
-    # Pass the current list of requests for that user
-    cur_requests = request.user.list_requests.all()
+    # Get the titles of the lists that the user has already made requests upon
+    cur_requests   = request.user.list_requests.values_list('itemList__title', flat=True)
 
     return render(request, 'butiko/request_permission.html', {'list_of_lists': list_of_lists, 'requests': cur_requests})
 
 def list_search(request):
     return render(request, 'butiko/list_search.html')
 
-def request_permission(request, listpk):
-    return redirect('home_page')
+def request_perm(request, listpk):
+    itemList = get_object_or_404(ItemList, pk=listpk)
+    list_request = PermRequest(itemList = itemList, user = request.user)
+    list_request.save()
+
+    return render(request, 'butiko/perm_request_success.html', {'list': itemList})
 
 # Create your views here.

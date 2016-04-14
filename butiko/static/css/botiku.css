@@ -104,3 +104,12 @@ ul.errorlist li {
 .request {
     margin-left: 10px;
 }
+
+.new-requests {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.show-hidden-div {
+    display: inline-block;
+}

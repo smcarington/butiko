@@ -9,6 +9,11 @@ $(document).ready(function() {
         });
     });
 
+    $('.show-hidden-div').click( function() {
+        data_field = $(this).attr('data-id');
+        $("div[data-id='"+data_field+"']").prop('hidden', false);
+    });
+
     $('#suggestion').keyup( function() {
         var query;
         query = $(this).val();
@@ -27,6 +32,7 @@ $(document).ready(function() {
         }
         else {
             $(this).css({'background-color': 'red'});
+            $('#register-user').prop('disabled', true);
         }
     });
 });

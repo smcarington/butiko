@@ -7,6 +7,15 @@
                 <a href="{% url 'list_detail' pk=listEl.pk %}">{{ listEl.title }} <span>({{ listEl.item_set.count}} items)</span></a>
                 <a class="button-link" href="{% url 'delete_item' pk=listEl.pk objectStr='list' %}"><span class="glyphicon glyphicon-remove listbutton fright"></span></a>
                 <p class="date"> Last Modified: {{ listEl.modified }} </p>
+                {% if listEl.title in perm_requests %}
+                <div class="new-requests" >
+                        <p> <span class="glyphicon glyphicon-exclamation-sign"></span>You have new requests for this list <button class="show-hidden-div btn-default" data-id="{{listEl.title}}">Show Requests</button></p> 
+                    </div>
+                    <div data-id="{{listEl.title}}" hidden>
+                        <p>User {{perm_requests.user}} has requested access to {{listEl.title}}.</p>
+                        <button>Grant Access</button> <button>Deny Access </button>
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
         <br>

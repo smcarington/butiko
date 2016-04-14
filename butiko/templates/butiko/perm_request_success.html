@@ -1,0 +1,9 @@
+{% extends 'butiko/base.html' %}
+
+{% block content %}
+
+<h2>You have sent a request to {{list.owner}} to access {{list.title}} </h2>
+
+<a href="{% url 'home_page' %}">Return to Home</a>
+
+{% endblock %}

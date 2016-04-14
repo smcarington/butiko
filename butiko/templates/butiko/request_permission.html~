@@ -1,7 +1,10 @@
 {% for listEl in list_of_lists %}
     <div class="list-detail">
         <p> {{ listEl.title }} <span> (Owner: <b>{{ listEl.owner }}</b>) 
-            <a href="{% url 'request_permission' listpk=listEl.pk %}" class="btn btn-default request" >Request</a>
+            <a href="{% url 'request_perm' listpk=listEl.pk %}" class="btn btn-default request" 
+                {% if listEl.title in requests %}
+                disabled
+                {% endif}>Request</a>
         </p>
     </div>
 {% endfor %}
