@@ -1,18 +1,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.utils import timezone
 from .models import ItemList, Item, PermRequest
 from .forms import ItemForm, ItemListForm, UserForm
+import json
     
 def home_page(request):
     if request.user.is_authenticated():
         user = request.user
         userItems = user.lists.order_by('created_date')
-        perm_requests = PermRequest.objects.filter(itemList__owner=user).values_list('itemList__title',flat=True)
+        #perm_requests = PermRequest.objects.filter(itemList__owner=user).values_list('itemList__title', 'user__username')
+        perm_requests = PermRequest.objects.filter(itemList__owner=user)
         #userItems = ItemList.objects.filter(owner=request.user).order_by('created_date')
-        return render(request, 'butiko/home_page.html', {'userItems': userItems, 'perm_requests': dict(perm_requests)})
+        return render(request, 'butiko/home_page.html', {'userItems': userItems, 'perm_requests': perm_requests})
     else:
         return render(request, 'butiko/home_page.html', {})
 
@@ -152,5 +154,39 @@ def request_perm(request, listpk):
     list_request.save()
 
     return render(request, 'butiko/perm_request_success.html', {'list': itemList})
+
+# AJAX request handler. Sends data whether the owner of a list permits an access
+# request to his/her list.
+# Request should have instances of 'action', 'list', 'user' (who makes the request)
+def grant_deny(request):
+    try:
+        action   = request.GET['action']
+        listName = request.GET['list']
+        ask_user = request.GET['user']
+    except:
+        raise Http404('One of the required variables does not exist')
+
+    itemList = get_object_or_404(ItemList, title=listName)
+    req_user = get_object_or_404(User, username=ask_user)
+
+    try:
+        theRequest = PermRequest.objects.filter(itemList=itemList, user=req_user);
+    except:
+        raise Http404('No such permission was requested.')
+    
+    if itemList.owner == request.user:
+        # Check to see if the action is to grant or deny. In either case,
+        # give the corresponding message then delete the permission
+        if action == "grant":
+            itemList.users.add(req_user)
+            response_data = {'response': "<p>"+ req_user.username + " was <b>successfully</b> added to " + itemList.title+"</p>" }
+            theRequest.delete()
+        elif action == "deny": 
+            response_data = {'response': "<p>" + req_user.username + " was <b>denied</b> access to " + itemList.title+"</p>" }
+            theRequest.delete()
+    else:
+        raise HttpResponseForbidden()
+
+    return HttpResponse(json.dumps(response_data))
 
 # Create your views here.

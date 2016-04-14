@@ -11,7 +11,32 @@ $(document).ready(function() {
 
     $('.show-hidden-div').click( function() {
         data_field = $(this).attr('data-id');
-        $("div[data-id='"+data_field+"']").prop('hidden', false);
+        $divEl = $(".sunken-div[data-id='"+data_field+"']");
+        if ($divEl.prop('hidden') == true) {
+            $divEl.prop('hidden', false)
+            $(this).html('Hide Request');
+        } else {
+            $divEl.prop('hidden', true);
+            $(this).html('Show Request');
+//        $("div[data-id='"+data_field+"']").prop('hidden', false);
+        }
+    });
+
+    $('.grant-deny').click( function() {
+        var splitStr = $(this).attr('data').split('-');
+        var act = splitStr[0]; lis = splitStr[1]; use = splitStr[2];
+        var sunkdiv = ".sunken-div[data-id='".concat(lis,"-",use, "']");
+        var reqdiv  = ".new-requests[data-id='".concat(lis,"-",use, "']");
+        $divEl1 = $(sunkdiv);
+        $divEl2 = $(reqdiv);
+        $.get('/butiko/grant_deny/', {action: act, list: lis, user: use}, function(data) {
+            $divEl1.html(data['response']);
+            setTimeout( function() { del_div($divEl1); del_div($divEl2); }, 2000);
+
+            function del_div(divEl) {
+                divEl.remove()
+            }
+        }, "json");
     });
 
     $('#suggestion').keyup( function() {
