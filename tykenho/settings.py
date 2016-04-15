@@ -28,7 +28,7 @@ with open('/etc/secret_key.txt') as f:
 #
 DEBUG = True
 
-if socket.gethostname == 'dobox':
+if socket.gethostname() == 'dobox':
     DEBUG = False
 else: 
     DEBUG = True
