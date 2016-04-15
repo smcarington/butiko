@@ -35,6 +35,10 @@ else:
 
 <<<<<<< HEAD
 ALLOWED_HOSTS = ["127.0.0.1",]
+=======
+ALLOWED_HOSTS = []
+>>>>>>> 83ef7c2a09d07d547c796b037687ee467910cb87
+
 
 # Application definition
 
