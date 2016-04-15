@@ -99,7 +99,6 @@ def add_new_list(request):
         form = ItemListForm()
         return render(request, 'butiko/add_new_item.html', {'form': form})
 
-@login_required
 def register_user(request):
     if request.method == "POST":
         form = UserForm(request.POST)
