@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.utils import timezone
 from .models import ItemList, Item, PermRequest
@@ -18,11 +19,13 @@ def home_page(request):
     else:
         return render(request, 'butiko/home_page.html', {})
 
+@login_required
 def list_detail(request, pk):
     theList = get_object_or_404(ItemList, pk=pk)
     items   = theList.item_set.all()
     return render(request, 'butiko/list_detail.html', {'items': items, 'list': theList})
 
+@login_required
 def change_item_count(request):
     if request.method == 'GET':
         item = get_object_or_404(Item, title__exact=request.GET['item']);
@@ -32,6 +35,7 @@ def change_item_count(request):
             item.change_number(-1);
         return HttpResponse(item.number)
 
+@login_required
 def add_new_item(request, listpk):
     # listpk is the primary key of the list to which the item is
     # to be added.
@@ -54,6 +58,7 @@ def add_new_item(request, listpk):
 
 # Deletes either an item or a list, as given by the string object_type
 # Checks to see if the user is allowed access
+@login_required
 def delete_item(request, objectStr, pk):
 
     # Depending on which item is set, we return different pages
@@ -78,6 +83,7 @@ def delete_item(request, objectStr, pk):
     else:
         return render(request, 'butiko/access_denied.html', {'object': theObj})
 
+@login_required
 def add_new_list(request):
     if request.method == "POST":
         form = ItemListForm(request.POST)
@@ -93,6 +99,7 @@ def add_new_list(request):
         form = ItemListForm()
         return render(request, 'butiko/add_new_item.html', {'form': form})
 
+@login_required
 def register_user(request):
     if request.method == "POST":
         form = UserForm(request.POST)
@@ -131,6 +138,7 @@ def get_lists(user,max_results=0, starts_with=''):
 
 # Ajax response that returns a list of lists, but filters according
 # to whether the user already belongs or not
+@login_required
 def suggest_list(request):
     MAX_RESULTS = 8
     list_of_lists = []
@@ -145,9 +153,11 @@ def suggest_list(request):
 
     return render(request, 'butiko/request_permission.html', {'list_of_lists': list_of_lists, 'requests': cur_requests})
 
+@login_required
 def list_search(request):
     return render(request, 'butiko/list_search.html')
 
+@login_required
 def request_perm(request, listpk):
     itemList = get_object_or_404(ItemList, pk=listpk)
     list_request = PermRequest(itemList = itemList, user = request.user)
@@ -158,6 +168,7 @@ def request_perm(request, listpk):
 # AJAX request handler. Sends data whether the owner of a list permits an access
 # request to his/her list.
 # Request should have instances of 'action', 'list', 'user' (who makes the request)
+@login_required
 def grant_deny(request):
     try:
         action   = request.GET['action']

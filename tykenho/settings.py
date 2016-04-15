@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
-import os
+import os, socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +20,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'xs6!hmxg@l^x_*qi&tf+tbdok-qva=%b!8ap_uzutg6&x-^!hx'
+
+with open('/etc/secret_key.txt') as f:
+    SECRET_KEY = f.read().strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#
 DEBUG = True
 
-ALLOWED_HOSTS = []
+if socket.gethostname() == 'dobox':
+    DEBUG = False
+else: 
+    DEBUG = True
+
+ALLOWED_HOSTS = ["127.0.0.1",]
 
 
 # Application definition
@@ -75,12 +83,28 @@ WSGI_APPLICATION = 'tykenho.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if socket.gethostname() == 'dobox':
+    with open('/etc/dbpasswd.txt') as f:
+        dbpasswd = f.read().strip()
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'mydb', 
+            # The following settings are not used with sqlite3:
+            'USER': 'tholden',
+            'PASSWORD': dbpasswd,
+            'HOST': 'localhost',
+            'PORT': '',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
@@ -120,7 +144,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+if socket.gethostname() == 'dobox':
+    STATIC_ROOT = "/opt/myvenv/static"
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = '/butiko/'
 
