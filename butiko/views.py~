@@ -25,7 +25,6 @@ def list_detail(request, pk):
     items   = theList.item_set.all()
     return render(request, 'butiko/list_detail.html', {'items': items, 'list': theList})
 
-@login_required
 def change_item_count(request):
     if request.method == 'GET':
         item = get_object_or_404(Item, title__exact=request.GET['item']);

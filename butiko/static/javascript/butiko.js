@@ -1,11 +1,27 @@
 $(document).ready(function() {
     //Add listener to buttons
+
+    var numUpdate = 0;
     $(".button-link").click( function() {
         var classString = $(this).attr("data-id");
         itemID     = classString.substring(0,classString.indexOf('-'));
         itemAction = classString.substring(classString.indexOf('-')+1);
+
+        // Optimistically update, but show grey to convey updating
+        $itemNumber = $("[id='"+itemID+"']");
+        curNum = parseInt($itemNumber.html());
+        if (itemAction == "add" ) {
+            $itemNumber.html((curNum+1).toString());
+            $itemNumber.css('color', '#e6e6e6');
+        }
+        else if (itemAction == "sub" && curNum >0) {
+            $itemNumber.html((curNum-1).toString());
+            $itemNumber.css('color', '#e6e6e6');
+        }
+
         $.get('/butiko/list/change_item_count/', {item: itemID, action: itemAction}, function(data, status){
-            $("#"+item).html(data);
+            $itemNumber.html(data);
+            $itemNumber.css('color','#000000');
         });
     });
 
