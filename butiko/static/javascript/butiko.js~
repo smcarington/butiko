@@ -2,6 +2,19 @@ $(document).ready(function() {
     //Add listener to buttons
 
     var numUpdate = 0;
+    var curFunHandle;
+    
+    // A function which makes the call and updates the database. Note that when it returns, it must reset numUpdate
+    // clear the current function handle
+    function update_item(jsonData) {
+        alert('Hit');
+        $itemNumber = $("[id='"+jsonData['item']+"']");
+        $.get('/butiko/list/change_item_count/', jsonData, function(data, status){
+           $itemNumber.html(data);
+           $itemNumber.css('color','#000000');
+        });
+    }
+
     $(".button-link").click( function() {
         var classString = $(this).attr("data-id");
         itemID     = classString.substring(0,classString.indexOf('-'));
@@ -12,17 +25,26 @@ $(document).ready(function() {
         curNum = parseInt($itemNumber.html());
         if (itemAction == "add" ) {
             $itemNumber.html((curNum+1).toString());
-            $itemNumber.css('color', '#e6e6e6;');
+            $itemNumber.css('color', '#e6e6e6');
+            numUpdate++;
         }
         else if (itemAction == "sub" && curNum >0) {
             $itemNumber.html((curNum-1).toString());
-            $itemNumber.css('color', '#e6e6e6;');
+            $itemNumber.css('color', '#e6e6e6');
+            numUpdate--;
         }
+    
+        // Check to see if there are pending requests. If not, create one
+        if (curFunHandle) {
+            clearTimeout(curFunHandle);
+            curFunHandle = null;
+        }
+        curFunHandle = setTimeout( function() {update_item({item:itemID, action:itemAction, num:numUpdate});},  1000);
 
-        $.get('/butiko/list/change_item_count/', {item: itemID, action: itemAction}, function(data, status){
-            $itemNumber.html(data);
-            $itemNumber.css('color','#000000;');
-        });
+//        $.get('/butiko/list/change_item_count/', {item: itemID, action: itemAction}, function(data, status){
+//            $itemNumber.html(data);
+//            $itemNumber.css('color','#000000');
+//        });
     });
 
     $('.show-hidden-div').click( function() {

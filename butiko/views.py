@@ -28,10 +28,13 @@ def list_detail(request, pk):
 def change_item_count(request):
     if request.method == 'GET':
         item = get_object_or_404(Item, title__exact=request.GET['item']);
-        if request.GET['action'] == "add":
-            item.change_number(1);
-        elif request.GET['action'] == "sub":
-            item.change_number(-1);
+#        if request.GET['action'] == "add":
+#            item.change_number(1);
+#        elif request.GET['action'] == "sub":
+#            item.change_number(-1);
+        if 'num' in request.GET:
+            item.change_number(int(request.GET['num']))
+
         return HttpResponse(item.number)
 
 @login_required
