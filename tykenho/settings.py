@@ -150,15 +150,3 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 LOGIN_REDIRECT_URL = '/butiko/'
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST    = 'smtp.gmail.com'
-EMAIL_PORT    = 587
-
-with open('/etc/email_user.txt') as f:
-    content = f.readlines()
-    EMAIL_HOST_USER = content[0].strip()
-    EMAIL_HOST_PASSWORD = content[1].strip()
-
-EMAIL_USE_TLS = True
