@@ -11,8 +11,8 @@
                         <p class="date"> Last Modified: {{ item.update }} </p>
                     </div>
                     <div class="col-md-4">
-                        <a class="button-link" data-id="{{item.title}}-add" href=""><span class="glyphicon glyphicon-plus listbutton"></span></a>
-                        <a class="button-link" data-id="{{item.title}}-sub" href=""><span class="glyphicon glyphicon-minus listbutton"></span></a>
+                        <a class="button-link" data-id="{{item.title}}-add" href="javascript:void(0)"><span class="glyphicon glyphicon-plus listbutton"></span></a>
+                        <a class="button-link" data-id="{{item.title}}-sub" href="javascript:void(0)"><span class="glyphicon glyphicon-minus listbutton"></span></a>
                         <a class="button-link" href="{% url 'delete_item' pk=item.pk objectStr='item' %}"><span class="glyphicon glyphicon-remove listbutton fright"></span></a>
                     </div>
                 </div>

@@ -3,17 +3,6 @@ $(document).ready(function() {
 
     var numUpdate = 0;
     var curFunHandle;
-    
-    // A function which makes the call and updates the database. Note that when it returns, it must reset numUpdate
-    // clear the current function handle
-    function update_item(jsonData) {
-        alert('Hit');
-        $itemNumber = $("[id='"+jsonData['item']+"']");
-        $.get('/butiko/list/change_item_count/', jsonData, function(data, status){
-           $itemNumber.html(data);
-           $itemNumber.css('color','#000000');
-        });
-    }
 
     $(".button-link").click( function() {
         var classString = $(this).attr("data-id");
@@ -39,12 +28,14 @@ $(document).ready(function() {
             clearTimeout(curFunHandle);
             curFunHandle = null;
         }
-        curFunHandle = setTimeout( function() {update_item({item:itemID, action:itemAction, num:numUpdate});},  1000);
-
-//        $.get('/butiko/list/change_item_count/', {item: itemID, action: itemAction}, function(data, status){
-//            $itemNumber.html(data);
-//            $itemNumber.css('color','#000000');
-//        });
+        curFunHandle = setTimeout( function () {
+            $.get('/butiko/list/change_item_count/', {num: numUpdate, item: itemID}, function(data, status){
+               $itemNumber.html(data);
+               $itemNumber.css('color','#000000');
+               numUpdate = 0;
+               curFunHandle = null;
+            });
+        },1000);
     });
 
     $('.show-hidden-div').click( function() {
